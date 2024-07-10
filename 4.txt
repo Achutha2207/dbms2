@@ -1,0 +1,169 @@
+4)
+
+
+a)
+
+
+CREATE TABLE Employee (
+    F_name VARCHAR(50),
+    L_name VARCHAR(50),
+    Emp_id INTEGER PRIMARY KEY,
+    Bdate DATE,
+    Address VARCHAR(255),
+    Gender VARCHAR(10),
+    Salary INTEGER,
+    Super_Emp_id INTEGER,
+    D_no INTEGER,
+    FOREIGN KEY (Super_Emp_id) REFERENCES Employee(Emp_id),
+    FOREIGN KEY (D_no) REFERENCES Department(D_no)
+);
+
+CREATE TABLE Department (
+    D_name VARCHAR(100),
+    D_no INTEGER PRIMARY KEY,
+    D_Mgr_id INTEGER,
+    Mgr_start_date DATE,
+    FOREIGN KEY (D_Mgr_id) REFERENCES Employee(Emp_id)
+);
+
+CREATE TABLE Dept_Location (
+    D_no INTEGER,
+    D_location VARCHAR(100),
+    PRIMARY KEY (D_no, D_location),
+    FOREIGN KEY (D_no) REFERENCES Department(D_no)
+);
+
+CREATE TABLE Project (
+    P_name VARCHAR(100),
+    P_number INTEGER PRIMARY KEY,
+    P_location VARCHAR(100),
+    D_no INTEGER,
+    FOREIGN KEY (D_no) REFERENCES Department(D_no)
+);
+
+CREATE TABLE Works_on (
+    Emp_id INTEGER,
+    P_no INTEGER,
+    Hours INTEGER,
+    PRIMARY KEY (Emp_id, P_no),
+    FOREIGN KEY (Emp_id) REFERENCES Employee(Emp_id),
+    FOREIGN KEY (P_no) REFERENCES Project(P_number)
+);
+
+CREATE TABLE Dependent (
+    Emp_id INTEGER,
+    Dependent_name VARCHAR(100),
+    Gender VARCHAR(10),
+    Bdate DATE,
+    Relationship VARCHAR(50),
+    PRIMARY KEY (Emp_id, Dependent_name),
+    FOREIGN KEY (Emp_id) REFERENCES Employee(Emp_id)
+);
+
+
+
+
+b)
+
+
+-- Insert records into Department table
+INSERT INTO Department (D_name, D_no, D_Mgr_id, Mgr_start_date) VALUES
+('HR', 1, 101, '2020-01-15'),
+('Finance', 2, 102, '2019-05-20'),
+('Engineering', 3, 103, '2018-03-10');
+
+-- Insert records into Employee table
+INSERT INTO Employee (F_name, L_name, Emp_id, Bdate, Address, Gender, Salary, Super_Emp_id, D_no) VALUES
+('John', 'Doe', 101, '1980-01-01', '123 Elm St', 'M', 90000, NULL, 1),
+('Jane', 'Smith', 102, '1985-02-02', '456 Oak St', 'F', 85000, NULL, 2),
+('Michael', 'Johnson', 103, '1990-03-03', '789 Pine St', 'M', 95000, NULL, 3),
+('Emily', 'Davis', 104, '1992-04-04', '321 Maple St', 'F', 88000, 101, 1),
+('James', 'Brown', 105, '1988-05-05', '654 Birch St', 'M', 87000, 102, 2),
+('Patricia', 'Garcia', 106, '1995-06-06', '987 Cedar St', 'F', 91000, 103, 3),
+('Robert', 'Wilson', 107, '1982-07-07', '123 Elm St', 'M', 86000, 101, 1),
+('Linda', 'Martinez', 108, '1986-08-08', '456 Oak St', 'F', 93000, 102, 2),
+('David', 'Anderson', 109, '1993-09-09', '789 Pine St', 'M', 94000, 103, 3),
+('Susan', 'Taylor', 110, '1991-10-10', '321 Maple St', 'F', 86000, 101, 1);
+
+-- Insert records into Dept_Location table
+INSERT INTO Dept_Location (D_no, D_location) VALUES
+(1, 'New York'),
+(1, 'Chicago'),
+(2, 'San Francisco'),
+(2, 'Los Angeles'),
+(3, 'Seattle'),
+(3, 'Boston');
+
+-- Insert records into Project table
+INSERT INTO Project (P_name, P_number, P_location, D_no) VALUES
+('Project A', 201, 'New York', 1),
+('Project B', 202, 'San Francisco', 2),
+('Project C', 203, 'Seattle', 3),
+('Project D', 204, 'New York', 1),
+('Project E', 205, 'San Francisco', 2),
+('Project F', 206, 'Seattle', 3),
+('Project G', 207, 'New York', 1),
+('Project H', 208, 'San Francisco', 2),
+('Project I', 209, 'Seattle', 3),
+('Project J', 210, 'New York', 1);
+
+-- Insert records into Works_on table
+INSERT INTO Works_on (Emp_id, P_no, Hours) VALUES
+(101, 201, 10),
+(102, 202, 15),
+(103, 203, 20),
+(104, 204, 25),
+(105, 205, 30),
+(106, 206, 35),
+(107, 207, 40),
+(108, 208, 45),
+(109, 209, 50),
+(110, 210, 55);
+
+-- Insert records into Dependent table
+INSERT INTO Dependent (Emp_id, Dependent_name, Gender, Bdate, Relationship) VALUES
+(101, 'Anna Doe', 'F', '2010-01-01', 'Daughter'),
+(102, 'Chris Smith', 'M', '2008-02-02', 'Son'),
+(103, 'Emily Johnson', 'F', '2012-03-03', 'Daughter'),
+(104, 'Sophia Davis', 'F', '2015-04-04', 'Daughter'),
+(105, 'Liam Brown', 'M', '2013-05-05', 'Son'),
+(106, 'Emma Garcia', 'F', '2011-06-06', 'Daughter'),
+(107, 'Olivia Wilson', 'F', '2014-07-07', 'Daughter'),
+(108, 'Lucas Martinez', 'M', '2009-08-08', 'Son'),
+(109, 'Mason Anderson', 'M', '2016-09-09', 'Son'),
+(110, 'Ethan Taylor', 'M', '2017-10-10', 'Son');
+
+
+
+c)
+
+
+SELECT e1.F_name, e1.L_name, e1.Address
+FROM Employee e1
+JOIN Employee e2 ON e1.D_no = e2.D_no
+WHERE e1.Emp_id <> e2.Emp_id
+ORDER BY e1.D_no, e1.L_name, e1.F_name;
+
+
+
+d)
+
+SELECT d.D_name, e.L_name, e.F_name, p.P_name
+FROM Employee e
+JOIN Works_on w ON e.Emp_id = w.Emp_id
+JOIN Project p ON w.P_no = p.P_number
+JOIN Department d ON e.D_no = d.D_no
+ORDER BY d.D_name, e.L_name, e.F_name;
+
+
+
+e)
+
+
+
+CREATE VIEW Dept_info AS
+SELECT d.D_name, COUNT(e.Emp_id) AS Number_of_Employees, SUM(e.Salary) AS Total_Salary
+FROM Department d
+JOIN Employee e ON d.D_no = e.D_no
+GROUP BY d.D_name;
+

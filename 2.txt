@@ -1,0 +1,108 @@
+2)
+
+a)
+
+CREATE TABLE GUIDE (
+    Guide_No INTEGER PRIMARY KEY,
+    Guide_name VARCHAR(100) NOT NULL,
+    Guide_research_domain VARCHAR(100),
+    Contact_No INTEGER,
+    Email_Id VARCHAR(100)
+);
+
+CREATE TABLE STUDENT (
+    Rollno INTEGER PRIMARY KEY,
+    Name VARCHAR(100) NOT NULL,
+    Sem INTEGER,
+    Degree VARCHAR(50),
+    Contact_no INTEGER,
+    Guide_No INTEGER,
+    FOREIGN KEY (Guide_No) REFERENCES GUIDE(Guide_No)
+);
+
+CREATE TABLE PROJECT (
+    Project_No INTEGER PRIMARY KEY,
+    Project_title VARCHAR(255) NOT NULL,
+    Project_Area VARCHAR(100),
+    Start_dt DATE,
+    Guide_No INTEGER,
+    FOREIGN KEY (Guide_No) REFERENCES GUIDE(Guide_No)
+);
+
+CREATE TABLE GROUP_ (
+    Group_Code INTEGER,
+    Roll_No INTEGER,
+    PRIMARY KEY (Group_Code, Roll_No),
+    FOREIGN KEY (Roll_No) REFERENCES STUDENT(Rollno)
+);
+
+CREATE TABLE PROJECT_GROUP (
+    Group_Code INTEGER,
+    Project_No INTEGER,
+    no_of_students INTEGER,
+    PRIMARY KEY (Group_Code, Project_No),
+    FOREIGN KEY (Group_Code) REFERENCES GROUP(Group_Code),
+    FOREIGN KEY (Project_No) REFERENCES PROJECT(Project_No)
+);
+
+
+
+b)
+
+-- Insert records into GUIDE table
+INSERT INTO GUIDE (Guide_No, Guide_name, Guide_research_domain, Contact_No, Email_Id) VALUES
+(1, 'Dr. Smith', 'Data Base', 1234567890, 'smith@example.com'),
+(2, 'Dr. Johnson', 'Artificial Intelligence', 2345678901, 'johnson@example.com'),
+(3, 'Dr. Williams', 'Machine Learning', 3456789012, 'williams@example.com'),
+(4, 'Dr. Brown', 'Cyber Security', 4567890123, 'brown@example.com'),
+(5, 'Dr. Jones', 'Data Base', 5678901234, 'jones@example.com');
+
+-- Insert records into STUDENT table
+INSERT INTO STUDENT (Rollno, Name, Sem, Degree, Contact_no, Guide_No) VALUES
+(101, 'Alice', 6, 'B.Tech', 9876543210, 1),
+(102, 'Bob', 6, 'B.Tech', 8765432109, 1),
+(103, 'Charlie', 6, 'B.Tech', 7654321098, 2),
+(104, 'David', 6, 'B.Tech', 6543210987, 3),
+(105, 'Eva', 6, 'B.Tech', 5432109876, 4),
+(106, 'Frank', 6, 'B.Tech', 4321098765, 5),
+(107, 'Grace', 6, 'B.Tech', 3210987654, 5),
+(108, 'Hannah', 6, 'B.Tech', 2109876543, 2),
+(109, 'Ivan', 6, 'B.Tech', 1098765432, 3),
+(110, 'Julia', 6, 'B.Tech', 9876543211, 4);
+
+
+
+c)
+
+
+
+SELECT g.Guide_name, COUNT(DISTINCT pg.Group_Code) AS num_groups
+FROM GUIDE g
+JOIN PROJECT p ON g.Guide_No = p.Guide_No
+JOIN PROJECT_GROUP pg ON p.Project_No = pg.Project_No
+GROUP BY g.Guide_name
+HAVING COUNT(DISTINCT pg.Group_Code) > 2;
+
+d)
+
+
+SELECT p.Project_No, p.Project_title, g.Guide_name
+FROM PROJECT p
+JOIN GUIDE g ON p.Guide_No = g.Guide_No
+WHERE p.Project_Area = 'Data Base';
+
+
+e)
+
+CREATE VIEW student_project_details AS
+SELECT s.Name AS Student_Name, p.Project_title AS Project_Name, g.Guide_name AS Guide_Name
+FROM STUDENT s
+JOIN GROUP g1 ON s.Rollno = g1.Roll_No
+JOIN PROJECT_GROUP pg ON g1.Group_Code = pg.Group_Code
+JOIN PROJECT p ON pg.Project_No = p.Project_No
+JOIN GUIDE g ON p.Guide_No = g.Guide_No;
+
+
+
+
+

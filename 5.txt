@@ -1,0 +1,108 @@
+5) 
+
+
+a)
+
+CREATE TABLE Sailors (
+    sid INTEGER PRIMARY KEY,
+    sname VARCHAR(50),
+    rating INTEGER,
+    age REAL
+);
+
+CREATE TABLE Boats (
+    bid INTEGER PRIMARY KEY,
+    bname VARCHAR(50),
+    color VARCHAR(20)
+);
+
+CREATE TABLE Reserves (
+    sid INTEGER,
+    bid INTEGER,
+    day DATE,
+    PRIMARY KEY (sid, bid, day),
+    FOREIGN KEY (sid) REFERENCES Sailors(sid),
+    FOREIGN KEY (bid) REFERENCES Boats(bid)
+);
+b)
+
+-- Insert records into Sailors table
+INSERT INTO Sailors (sid, sname, rating, age) VALUES
+(1, 'John Doe', 10, 25.5),
+(2, 'Jane Smith', 8, 22.3),
+(3, 'Michael Johnson', 7, 30.1),
+(4, 'Emily Davis', 9, 24.8),
+(5, 'James Brown', 6, 20.5),
+(6, 'Patricia Garcia', 5, 27.7),
+(7, 'Robert Wilson', 8, 19.9),
+(8, 'Linda Martinez', 7, 23.4),
+(9, 'David Anderson', 10, 26.2),
+(10, 'Susan Taylor', 6, 21.6);
+
+-- Insert records into Boats table
+INSERT INTO Boats (bid, bname, color) VALUES
+(101, 'Boaty McBoatface', 'red'),
+(102, 'Seas the Day', 'blue'),
+(103, 'Aquaholic', 'green'),
+(104, 'Nauti Buoy', 'red'),
+(105, 'Pier Pressure', 'yellow'),
+(106, 'Sail La Vie', 'blue'),
+(107, 'Knot on Call', 'green'),
+(108, 'Usain Boat', 'red'),
+(109, 'Sea Senor', 'yellow'),
+(110, 'Row vs Wade', 'blue');
+
+-- Insert records into Reserves table
+INSERT INTO Reserves (sid, bid, day) VALUES
+(1, 101, '2024-07-01'),
+(2, 102, '2024-07-02'),
+(3, 103, '2024-07-03'),
+(4, 104, '2024-07-04'),
+(5, 105, '2024-07-05'),
+(6, 106, '2024-07-06'),
+(7, 107, '2024-07-07'),
+(8, 108, '2024-07-08'),
+(9, 109, '2024-07-09'),
+(10, 110, '2024-07-10');
+
+
+
+c)
+
+
+SELECT s.sname
+FROM Sailors s
+JOIN Reserves r ON s.sid = r.sid
+JOIN Boats b ON r.bid = b.bid
+WHERE b.color = 'red'
+ORDER BY s.age;
+
+d)
+
+SELECT s.sname
+FROM Sailors s
+JOIN Reserves r ON s.sid = r.sid
+WHERE r.bid = 103;
+
+
+e)
+
+
+SELECT sname, age
+FROM Sailors
+ORDER BY age ASC
+LIMIT 1;
+
+
+
+f)
+
+SELECT rating, AVG(age) AS average_age
+FROM Sailors
+GROUP BY rating
+HAVING COUNT(*) >= 2;
+
+
+ 
+
+
