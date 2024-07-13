@@ -40,7 +40,7 @@ b)
 
 
 -- Insert records into Flights table
-INSERT INTO Flights (flno, "from", "to", distance, departs, arrives, price) VALUES
+INSERT INTO Flights (flno, from_, to_, distance, departs, arrives, price) VALUES
 (1, 'Los Angeles', 'Honolulu', 2556, '08:00:00', '11:30:00', 400),
 (2, 'New York', 'London', 3450, '18:00:00', '06:00:00', 700),
 (3, 'San Francisco', 'Tokyo', 5140, '12:00:00', '16:00:00', 800),
